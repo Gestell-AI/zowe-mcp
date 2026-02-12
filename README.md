@@ -191,6 +191,4 @@ ZOWE_MCP_MOCK=true node dist/index.js
 
 MIT
 
-## Contributing
 
-Contributions welcome! Please open an issue or PR.
