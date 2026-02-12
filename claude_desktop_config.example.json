@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "zowe-mcp-server": {
+      "command": "node",
+      "args": ["/path/to/zowe-mcp-server/dist/index.js"],
+      "env": {
+        "ZOWE_MCP_MOCK": "false"
+      }
+    }
+  }
+}
