@@ -1,0 +1,13 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    environment: "node",
+    include: ["tests/**/*.test.ts"],
+    globals: false,
+    testTimeout: 10000,
+    env: {
+      ZOWE_MCP_MOCK: "true"
+    }
+  }
+});
