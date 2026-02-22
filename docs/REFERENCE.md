@@ -10,6 +10,8 @@
 | `zowe_list_members` | List members of a PDS/PDSE library |
 | `zowe_read_dataset` | Read contents of a dataset or member |
 | `zowe_search_datasets` | Search for text within a dataset |
+| `zowe_upload_file_to_dataset` | Upload one local file into a target dataset/member |
+| `zowe_upload_directory_to_pds` | Upload all files from a local directory into a PDS |
 
 ### Job Tools
 

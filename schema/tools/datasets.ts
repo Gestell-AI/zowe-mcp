@@ -37,3 +37,25 @@ export const searchDatasetsInputSchema = {
   /** Optional base profile override for this single call. */
   base_profile: z.string().optional().describe('Optional base profile override')
 }
+
+export const uploadFileToDatasetInputSchema = {
+  /** Workspace-local file path to upload (for example: `demo/source/10-view/view.jcl`). */
+  local_file: z.string().describe('Local file path to upload'),
+  /** Target z/OS dataset or member (for example: `DEMO.SAMPLE.JCL(VIEW)`). */
+  dataset: z.string().describe('Target dataset or dataset(member)'),
+  /** Optional z/OSMF profile override for this single call. */
+  zosmf_profile: z.string().optional().describe('Optional zosmf profile override'),
+  /** Optional base profile override for this single call. */
+  base_profile: z.string().optional().describe('Optional base profile override')
+}
+
+export const uploadDirectoryToPdsInputSchema = {
+  /** Workspace-local directory path to upload (each file becomes a member). */
+  local_dir: z.string().describe('Local directory path to upload'),
+  /** Target partitioned dataset name (for example: `DEMO.SAMPLE.COPYLIB`). */
+  dataset: z.string().describe('Target PDS dataset name'),
+  /** Optional z/OSMF profile override for this single call. */
+  zosmf_profile: z.string().optional().describe('Optional zosmf profile override'),
+  /** Optional base profile override for this single call. */
+  base_profile: z.string().optional().describe('Optional base profile override')
+}

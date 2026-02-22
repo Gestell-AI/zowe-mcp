@@ -26,7 +26,7 @@ Verify:
 
 ## Check 3: Reporting Output Is Produced
 
-Confirm `VIEWCOMP` job completed with `CC 0000` and spool is retrievable.
+Confirm `VIEWCOMP` job completed with an allowed non-blocking code (`CC 0000`, `CC 0004`, or `CC 0008`) and spool is retrievable.
 
 ## Output Contract
 

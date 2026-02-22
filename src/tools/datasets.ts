@@ -2,7 +2,9 @@ import {
   listDatasetsInputSchema,
   listMembersInputSchema,
   readDatasetInputSchema,
-  searchDatasetsInputSchema
+  searchDatasetsInputSchema,
+  uploadDirectoryToPdsInputSchema,
+  uploadFileToDatasetInputSchema
 } from '@gestell/schema/tools/datasets'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
@@ -191,6 +193,74 @@ export function registerDatasetTools(server: McpServer): void {
       ]
 
       return { content: [{ type: 'text', text: summary.join('\n') }] }
+    }
+  )
+
+  server.registerTool(
+    'zowe_upload_file_to_dataset',
+    {
+      title: 'Upload Local File to Dataset Member',
+      description: 'Upload a local workspace file into a z/OS dataset or member.\n\nUse this to preload demo artifacts (JCL/COBOL/copybooks) into target PDS libraries.\n\nArgs:\n  - local_file (string): Local file path (e.g., "demo/source/10-view/view.jcl")\n  - dataset (string): Target dataset/member (e.g., "DEMO.SAMPLE.JCL(VIEW)")',
+      inputSchema: uploadFileToDatasetInputSchema,
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+    },
+    async (params) => {
+      const args = withZoweOptions(
+        [params.local_file, params.dataset],
+        params,
+        { allowZosmfProfile: true }
+      )
+      const execution = await executeZoweManaged('zos-files upload file-to-data-set', args)
+      if (execution.pending) {
+        return { content: [{ type: 'text', text: formatPendingTaskMessage('zowe_upload_file_to_dataset', execution.taskId) }] }
+      }
+      const result = execution.result
+      if (!result.success) {
+        return { content: [{ type: 'text', text: `Error uploading file to dataset: ${result.stderr}` }] }
+      }
+
+      return {
+        content: [{
+          type: 'text',
+          text: result.stdout
+            ? `Uploaded \`${params.local_file}\` to \`${params.dataset}\`.\n\nCLI output:\n\`\`\`\n${result.stdout}\n\`\`\``
+            : `Uploaded \`${params.local_file}\` to \`${params.dataset}\`.`
+        }]
+      }
+    }
+  )
+
+  server.registerTool(
+    'zowe_upload_directory_to_pds',
+    {
+      title: 'Upload Local Directory to PDS',
+      description: 'Upload local files from a workspace directory into a target PDS library.\n\nEach file becomes a member in the PDS according to Zowe CLI naming rules.\n\nArgs:\n  - local_dir (string): Local directory to upload\n  - dataset (string): Target PDS dataset (e.g., "DEMO.SAMPLE.COBOL")',
+      inputSchema: uploadDirectoryToPdsInputSchema,
+      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }
+    },
+    async (params) => {
+      const args = withZoweOptions(
+        [params.local_dir, params.dataset],
+        params,
+        { allowZosmfProfile: true }
+      )
+      const execution = await executeZoweManaged('zos-files upload dir-to-pds', args)
+      if (execution.pending) {
+        return { content: [{ type: 'text', text: formatPendingTaskMessage('zowe_upload_directory_to_pds', execution.taskId) }] }
+      }
+      const result = execution.result
+      if (!result.success) {
+        return { content: [{ type: 'text', text: `Error uploading directory to PDS: ${result.stderr}` }] }
+      }
+
+      return {
+        content: [{
+          type: 'text',
+          text: result.stdout
+            ? `Uploaded directory \`${params.local_dir}\` to \`${params.dataset}\`.\n\nCLI output:\n\`\`\`\n${result.stdout}\n\`\`\``
+            : `Uploaded directory \`${params.local_dir}\` to \`${params.dataset}\`.`
+        }]
+      }
     }
   )
 }

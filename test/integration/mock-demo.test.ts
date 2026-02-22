@@ -132,6 +132,34 @@ describe('Mock Demo Flow Integration Tests', () => {
       expect(result.stdout).toContain('PROGRAM-ID')
       expect(result.stdout).toContain('PROCEDURE DIVISION')
     })
+
+    it('uploads a local file into a dataset member', async () => {
+      const { executeZowe } = await import('@gestell/mcp/services/zowe-executor')
+
+      const result = await executeZowe('zos-files upload file-to-data-set', [
+        'demo/source/10-view/view.jcl',
+        'DEMO.SAMPLE.JCL(VIEW)'
+      ])
+
+      expect(result.success).toBe(true)
+      expect(result.exitCode).toBe(0)
+      expect(result.stdout).toContain('Uploaded local file')
+      expect(result.stdout).toContain('DEMO.SAMPLE.JCL(VIEW)')
+    })
+
+    it('uploads a local directory into a PDS', async () => {
+      const { executeZowe } = await import('@gestell/mcp/services/zowe-executor')
+
+      const result = await executeZowe('zos-files upload dir-to-pds', [
+        'demo/source/copybooks',
+        'DEMO.SAMPLE.COPYLIB'
+      ])
+
+      expect(result.success).toBe(true)
+      expect(result.exitCode).toBe(0)
+      expect(result.stdout).toContain('Uploaded directory')
+      expect(result.stdout).toContain('DEMO.SAMPLE.COPYLIB')
+    })
   })
 
   describe('TSO Operations with Guardrails', () => {

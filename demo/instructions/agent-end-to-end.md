@@ -12,10 +12,13 @@ Run the VSAM demo using only zowe-mcp-server tools and these instructions:
 
 Rules:
 - Execute in order.
-- Require CC 0000 for each workflow step.
+- Continue on `CC 0000`, `CC 0004`, or `CC 0008`.
+- Treat any `ABEND` or `CC 0012+` as failure.
 - On first failure: collect full spool, explain error, stop.
 - Produce a final summary with step/job/retcode table and PASS/FAIL.
 - Use only zowe-mcp-server tools. Never run direct `zowe` CLI commands.
 - If any tool returns `task_id`, always poll with `zowe_wait_async_task` until completion.
-- If bootstrap reports `BLOCKED_PRELOAD_REQUIRED`, stop and ask operator to preload artifacts.
+- In bootstrap, if required `DEMO.SAMPLE.*` libraries already exist, skip allocation and immediately upload members.
+- If libraries are missing, create only missing libraries using `zowe_tso_command`, then upload members.
+- Stop only on explicit bootstrap blocking verdicts (`BLOCKED_DATASET_CREATE_FAILED`, `BLOCKED_SOURCE_MISSING`, `BLOCKED_MEMBER_UPLOAD_FAILED`).
 ```

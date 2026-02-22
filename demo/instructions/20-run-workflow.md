@@ -6,9 +6,10 @@ Submit each job in strict order. For each step:
 2. If submit returns `task_id`, poll with `zowe_wait_async_task` until completion.
 3. Poll with `zowe_get_job_status` until completion.
 4. If status returns `task_id`, poll with `zowe_wait_async_task` until completion.
-5. Require `CC 0000`.
-6. Record `step`, `job_id`, `retcode`.
-7. On failure, switch to `40-failure-handling.md`.
+5. Treat these return codes as non-blocking and continue: `CC 0000`, `CC 0004`, `CC 0008`.
+6. Treat these as failures: any `ABEND`, any `CC 0012` or higher, and any unknown/unparseable retcode.
+7. Record `step`, `job_id`, `retcode`.
+8. On failure, switch to `40-failure-handling.md`.
 
 Hard rule: use only `zowe-mcp-server` tools. Do not execute direct `zowe` CLI commands.
 
@@ -28,4 +29,8 @@ Hard rule: use only `zowe-mcp-server` tools. Do not execute direct `zowe` CLI co
 
 ## Success Contract
 
-Proceed to validation only if all steps return `CC 0000`.
+Proceed to validation only if all steps end with allowed non-blocking return codes:
+
+- `CC 0000`
+- `CC 0004`
+- `CC 0008`

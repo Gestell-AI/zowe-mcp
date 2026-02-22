@@ -21,7 +21,7 @@ User <-> AI Assistant <-> MCP Protocol <-> This Server <-> Zowe CLI <-> z/OS
 
 ## Features
 
-- **15 Tools** for interacting with z/OS (datasets, jobs, TSO, console commands, async polling)
+- **17 Tools** for interacting with z/OS (datasets, jobs, uploads, TSO, console commands, async polling)
 - **5 Pre-built Prompts** for common workflows (onboarding, diagnostics, code review)
 - **5 Reference Resources** for z/OS concepts (JCL, COBOL, ABEND codes)
 - **Safety Guardrails** that block destructive commands (DELETE, CANCEL, PURGE)

@@ -5,6 +5,12 @@ Use this playbook when any workflow step fails.
 Use only `zowe-mcp-server` tools. Do not execute direct `zowe` CLI commands.
 If any call returns `task_id`, use `zowe_wait_async_task` until completion.
 
+Trigger this playbook when:
+
+- Any step returns `ABEND`
+- Any step returns `CC 0012` or higher
+- Any step returns unknown/unparseable retcode
+
 ## Required Actions
 
 1. Fetch full spool using `zowe_get_job_output`.

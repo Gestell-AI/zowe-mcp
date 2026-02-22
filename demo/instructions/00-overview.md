@@ -17,8 +17,11 @@ Use files from `demo/source/`.
 - `zowe_get_job_output`
 - `zowe_list_datasets`
 - `zowe_list_members`
+- `zowe_upload_file_to_dataset`
+- `zowe_upload_directory_to_pds`
 - `zowe_explain_error`
 - `zowe_wait_async_task`
+- `zowe_tso_command`
 
 ## Execution Order
 
@@ -31,7 +34,8 @@ Use files from `demo/source/`.
 
 1. Stop on first failing job unless the operator explicitly asks to continue.
 2. For each failed job, capture spool and provide error explanation.
-3. Treat `CC 0000` as required success for each workflow step.
+3. Treat `CC 0000`, `CC 0004`, and `CC 0008` as allowed non-blocking step outcomes.
 4. Persist a run log with step, job id, and return code.
 5. Use only `zowe-mcp-server` tools; do not run direct `zowe` CLI commands.
 6. For any tool call that returns `task_id`, poll with `zowe_wait_async_task` until completion.
+7. If `DEMO.SAMPLE.*` is empty during bootstrap, create required libraries and upload required members from `demo/source/`.

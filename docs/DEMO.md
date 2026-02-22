@@ -31,4 +31,13 @@ This demo runbook is MCP-only:
 
 1. Agents must use `zowe-mcp-server` tools only.
 2. Agents must not execute direct `zowe` CLI commands.
-3. If prerequisites are missing, agents must return `BLOCKED_PRELOAD_REQUIRED` and stop.
+3. During bootstrap, if required `DEMO.SAMPLE.*` libraries already exist, agents should skip allocation and go straight to member upload.
+4. If required libraries are missing, agents should create only the missing ones via `zowe_tso_command`.
+5. Agents should upload required members from `demo/source/` via dataset upload tools before member verification.
+
+## Return Code Policy
+
+For workflow execution steps:
+
+1. Continue on `CC 0000`, `CC 0004`, and `CC 0008`.
+2. Fail on any `ABEND` or `CC 0012` and higher.

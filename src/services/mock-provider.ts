@@ -13,6 +13,8 @@ export function getMockResponse(command: string, args: string[]): ZoweResult {
   if (fullCommand.startsWith('zos-jobs submit')) return mockSubmitJob(args)
   if (fullCommand.startsWith('zos-files list ds') || fullCommand.startsWith('zos-files list data-set')) return mockListDatasets(args)
   if (fullCommand.startsWith('zos-files list all-members')) return mockListMembers(args)
+  if (fullCommand.startsWith('zos-files upload file-to-data-set')) return mockUploadFileToDataset(args)
+  if (fullCommand.startsWith('zos-files upload dir-to-pds')) return mockUploadDirectoryToPds(args)
   if (
     fullCommand.startsWith('zos-files view ds') ||
     fullCommand.startsWith('zos-files view data-set') ||
@@ -148,6 +150,26 @@ function mockViewDataset(args: string[]): ZoweResult {
   return { success: true, stdout: `       * SAMPLE MEMBER CONTENT\n       * Dataset: ${target}`, stderr: '', exitCode: 0 }
 }
 
+function mockUploadFileToDataset(args: string[]): ZoweResult {
+  const [localFile, dataset] = extractPositionals(args)
+  return {
+    success: true,
+    stdout: `Uploaded local file "${localFile || 'local.txt'}" to dataset "${dataset || 'DEVUSR1.JCL(MEMBER)'}".`,
+    stderr: '',
+    exitCode: 0
+  }
+}
+
+function mockUploadDirectoryToPds(args: string[]): ZoweResult {
+  const [localDir, dataset] = extractPositionals(args)
+  return {
+    success: true,
+    stdout: `Uploaded directory "${localDir || './source'}" to PDS "${dataset || 'DEVUSR1.COBOL'}".`,
+    stderr: '',
+    exitCode: 0
+  }
+}
+
 function mockTsoCommand(args: string[]): ZoweResult {
   const cmd = extractArg(args, '--command') || extractPositional(args) || ''
   const upperCmd = cmd.toUpperCase()
@@ -181,6 +203,10 @@ function extractArg(args: string[], flag: string): string | undefined {
 }
 
 function extractPositional(args: string[]): string | undefined {
+  return extractPositionals(args)[0]
+}
+
+function extractPositionals(args: string[]): string[] {
   const flagsWithValues = new Set([
     '--account',
     '--base-profile',
@@ -193,6 +219,7 @@ function extractPositional(args: string[]): string | undefined {
     '--zosmf-profile'
   ])
 
+  const positionals: string[] = []
   for (let i = 0; i < args.length; i++) {
     const arg = args[i]
     if (arg === '--rfj') continue
@@ -200,9 +227,9 @@ function extractPositional(args: string[]): string | undefined {
       if (flagsWithValues.has(arg)) i++
       continue
     }
-    return arg
+    positionals.push(arg)
   }
-  return undefined
+  return positionals
 }
 
 const MOCK_COBOL_PAYROLL = `       IDENTIFICATION DIVISION.
