@@ -10,6 +10,9 @@
         "ZOWE_MCP_TSO_PROFILE": "tso",
         "ZOWE_MCP_TSO_ACCOUNT": "ACCT001",
         "ZOWE_MCP_EXEC_TIMEOUT_MS": "300000",
+        "ZOWE_MCP_INLINE_WAIT_MS": "10000",
+        "ZOWE_MCP_WAIT_TOOL_MAX_WAIT_MS": "55000",
+        "ZOWE_MCP_WAIT_TOOL_POLL_INTERVAL_MS": "2000",
         "ZOWE_CLI_HOME": "/ABSOLUTE/PATH/TO/custom-zowe-home",
         "NODE_EXTRA_CA_CERTS": "/ABSOLUTE/PATH/TO/ca-chain.pem"
       }

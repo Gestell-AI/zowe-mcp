@@ -1,0 +1,79 @@
+//SETBAL   JOB ,NOTIFY=&SYSUID,   
+// MSGLEVEL=(1,1),CLASS=A,MSGCLASS=X,TIME=(,4),REGION=144M
+//*
+//* STEP 7: COMPILE, LINK, AND RUN SETBAL (INITBAL) WITH SELF-HEALING
+//*
+//***************************
+//*  COMPILE SETBAL        **
+//***************************
+//COMPILE  EXEC PROC=ELAXFCOC,
+// CICS=,
+// DB2=,
+// COMP=,
+// COND=(8,LT)
+//COBOL.SYSDEBUG DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.SYSDEBUG(SETBAL)
+//COBOL.SYSLIN DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.OBJ(SETBAL)
+//COBOL.SYSLIB DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.COPYLIB
+//COBOL.SYSXMLSD DD DUMMY
+//COBOL.SYSIN DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.COBOL(SETBAL)
+//COBOL.SYSPRINT DD SYSOUT=*
+//*
+//***************************
+//*  LINK SETBAL           **
+//***************************
+//LINK     EXEC PROC=ELAXFLNK,
+//       PARM.LINK='LIST,MAP',
+//       COND=(8,LT)
+//LINK.OBJ0000 DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.OBJ(SETBAL)
+//LINK.SYSLIN DD *
+     INCLUDE OBJ0000
+/*
+//LINK.SYSLMOD   DD  DISP=SHR,
+//        DSN=DEMO.SAMPLE.LOAD(SETBAL)
+//*
+//***************************
+//*  CLEANUP PREVIOUS      **
+//***************************
+//DELETE   EXEC PGM=IDCAMS,COND=(8,LT)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  DELETE DEMO.ACCOUNTS.UPDATED PURGE
+  SET MAXCC = 0
+/*
+//*
+//***************************
+//*  RUN SETBAL (INITBAL)  **
+//***************************
+//RUN      EXEC PGM=SETBAL,COND=(8,LT)
+//STEPLIB  DD DSN=DEMO.SAMPLE.LOAD,DISP=SHR
+//SYSOUT   DD SYSOUT=*
+//SYSUDUMP DD SYSOUT=*
+//CUSTFILE DD DSN=DEMO.ACCOUNTS.CLUSTER,DISP=OLD
+//CUSTOUT  DD DSN=DEMO.ACCOUNTS.UPDATED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=DISK,
+//            SPACE=(TRK,(50,10),RLSE),
+//            DSORG=PS,RECFM=FB,LRECL=600,BLKSIZE=6000
+//*
+//***************************
+//*  VERIFY EXECUTION      **
+//***************************
+//VERIFY   EXEC PGM=IEFBR14,COND=(8,LT)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  SETBAL EXECUTION SUCCESSFUL - ACCOUNT BALANCES INITIALIZED
+/*
+//*
+//***************************
+//*  ERROR HANDLING        **
+//***************************
+//ERROR    EXEC PGM=IEFBR14,COND=ONLY
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  SETBAL EXECUTION FAILED - CHECK SYSPRINT
+/*

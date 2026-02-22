@@ -1,0 +1,26 @@
+000100 01  TXN-REC.
+000200     05  TXN-ID                  PIC X(12).
+000300     05  TXN-TYPE                PIC X(8).
+000400         88  TXN-TRANSFER        VALUE 'TRANSFER'.
+000500         88  TXN-CREDIT          VALUE 'CREDIT  '.
+000600         88  TXN-DEBIT           VALUE 'DEBIT   '.
+000700         88  TXN-INQUIRY        VALUE 'INQUIRY '.
+000800     05  FROM-ACCOUNT            PIC X(10).
+000900     05  TO-ACCOUNT              PIC X(10).
+001000     05  TXN-AMOUNT              PIC S9(7)V99 COMP-3.
+001100     05  TXN-DATE                PIC X(8).
+001200     05  TXN-TIME                PIC X(8).
+001300     05  TXN-STATUS              PIC X(8).
+001400         88  TXN-PENDING         VALUE 'PENDING '.
+001500         88  TXN-COMPLETE        VALUE 'COMPLETE'.
+001600         88  TXN-FAILED          VALUE 'FAILED  '.
+001700         88  TXN-REVERSED        VALUE 'REVERSED'.
+001800     05  TXN-DESCRIPTION         PIC X(30).
+001900     05  TXN-REFERENCE           PIC X(15).
+002000     05  TXN-CREATED-DATE        PIC X(8).
+002100     05  TXN-CREATED-TIME        PIC X(8).
+002200     05  TXN-PROCESSED-DATE      PIC X(8).
+002300     05  TXN-PROCESSED-TIME      PIC X(8).
+002400     05  TXN-ERROR-CODE          PIC X(8).
+002500     05  TXN-ERROR-MESSAGE       PIC X(30).
+002600     05  FILLER                  PIC X(16).

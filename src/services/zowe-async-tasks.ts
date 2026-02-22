@@ -39,6 +39,8 @@ export type ManagedExecution = ManagedExecutionPending | ManagedExecutionComplet
 
 const tasks = new Map<string, InternalTask>()
 const DEFAULT_INLINE_WAIT_MS = 10_000
+const DEFAULT_WAIT_TOOL_MAX_WAIT_MS = 55_000
+const DEFAULT_WAIT_TOOL_POLL_INTERVAL_MS = 2_000
 const DEFAULT_TASK_TTL_MS = 60 * 60 * 1000
 const DEFAULT_MAX_TASKS = 300
 
@@ -86,8 +88,50 @@ export function formatPendingTaskMessage(toolName: string, taskId: string): stri
   return [
     `Command queued for async completion from \`${toolName}\`.`,
     `task_id: ${taskId}`,
-    'Use `zowe_get_async_task` with that task_id to poll for completion.'
+    'Use `zowe_wait_async_task` (recommended) or `zowe_get_async_task` to poll for completion.'
   ].join('\n')
+}
+
+export interface WaitOnTaskResult {
+  found: boolean
+  timedOut: boolean
+  task?: ZoweAsyncTask
+}
+
+export async function waitOnAsyncTask(taskId: string, maxWaitMs?: number, pollIntervalMs?: number): Promise<WaitOnTaskResult> {
+  cleanupTasks()
+  const task = tasks.get(taskId)
+  if (!task) {
+    return { found: false, timedOut: false }
+  }
+
+  if (isCompleted(task)) {
+    return { found: true, timedOut: false, task: toPublicTask(task) }
+  }
+
+  const resolvedMaxWait = normalizePositiveInt(
+    maxWaitMs,
+    getPositiveInt(process.env.ZOWE_MCP_WAIT_TOOL_MAX_WAIT_MS, DEFAULT_WAIT_TOOL_MAX_WAIT_MS)
+  )
+  const resolvedPoll = normalizePositiveInt(
+    pollIntervalMs,
+    getPositiveInt(process.env.ZOWE_MCP_WAIT_TOOL_POLL_INTERVAL_MS, DEFAULT_WAIT_TOOL_POLL_INTERVAL_MS)
+  )
+
+  const started = Date.now()
+  while (Date.now() - started < resolvedMaxWait) {
+    const remaining = resolvedMaxWait - (Date.now() - started)
+    await Promise.race([
+      task.promise,
+      delay(Math.min(resolvedPoll, remaining))
+    ])
+
+    if (isCompleted(task)) {
+      return { found: true, timedOut: false, task: toPublicTask(task) }
+    }
+  }
+
+  return { found: true, timedOut: true, task: toPublicTask(task) }
 }
 
 function startTask(command: string, args: string[]): InternalTask {
@@ -182,4 +226,13 @@ function getPositiveInt(value: string | undefined, fallback: number): number {
   const parsed = Number(value)
   if (!Number.isInteger(parsed) || parsed <= 0) return fallback
   return parsed
+}
+
+function normalizePositiveInt(value: number | undefined, fallback: number): number {
+  if (!Number.isInteger(value) || !value || value <= 0) return fallback
+  return value
+}
+
+function isCompleted(task: InternalTask): boolean {
+  return task.status === 'completed'
 }

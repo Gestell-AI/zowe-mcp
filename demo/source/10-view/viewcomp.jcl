@@ -1,0 +1,92 @@
+//VIEWCOMP JOB ,NOTIFY=&SYSUID,   
+// MSGLEVEL=(1,1),CLASS=A,MSGCLASS=X,TIME=(,4),REGION=144M
+//*
+//* STEP 10: COMPILE, LINK, AND RUN VIEW PROGRAM WITH SELF-HEALING
+//*
+//***************************
+//*  COMPILE VIEW          **
+//***************************
+//COMPILE  EXEC PROC=ELAXFCOC,
+// CICS=,
+// DB2=,
+// COMP=,
+// COND=(8,LT)
+//COBOL.SYSDEBUG DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.SYSDEBUG(VIEW)
+//COBOL.SYSLIN DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.OBJ(VIEW)
+//COBOL.SYSLIB DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.COPYLIB
+//COBOL.SYSXMLSD DD DUMMY
+//COBOL.SYSIN DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.COBOL(VIEW)
+//COBOL.SYSPRINT DD SYSOUT=*
+//*
+//***************************
+//*  LINK VIEW             **
+//***************************
+//LINK     EXEC PROC=ELAXFLNK,
+//       PARM.LINK='LIST,MAP',
+//       COND=(8,LT)
+//LINK.SYSLIB  DD DISP=SHR,DSN=CEE.SCEELKED
+//             DD DISP=SHR,DSN=DEMO.SAMPLE.LOAD
+//LINK.OBJ0000 DD DISP=SHR,
+//        DSN=DEMO.SAMPLE.OBJ(VIEW)
+//LINK.SYSLIN DD *
+     INCLUDE OBJ0000
+/*
+//LINK.SYSLMOD   DD  DISP=SHR,
+//        DSN=DEMO.SAMPLE.LOAD(VIEW)
+//*
+//***************************
+//*  CLEANUP PREVIOUS      **
+//***************************
+//DELETE   EXEC PGM=IDCAMS,COND=(8,LT)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  DELETE DEMO.VIEW.REPORT PURGE
+  SET MAXCC = 0
+/*
+//*
+//***************************
+//*  RUN VIEW              **
+//***************************
+//RUN      EXEC PGM=VIEW,COND=(8,LT)
+//STEPLIB  DD DSN=DEMO.SAMPLE.LOAD,DISP=SHR
+//CUSTFILE DD DSN=DEMO.ACCOUNTS.CLUSTER,DISP=SHR
+//TXNDATA  DD DSN=DEMO.TXN.CLUSTER,DISP=SHR
+//VIEWRPT  DD DSN=DEMO.VIEW.REPORT,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=DISK,
+//            SPACE=(TRK,(50,10),RLSE),
+//            DSORG=PS,RECFM=FB,LRECL=132,BLKSIZE=0
+//SYSOUT   DD SYSOUT=*
+//SYSUDUMP DD SYSOUT=*
+//SYSPRINT DD SYSOUT=*
+//*
+//***************************
+//*  DISPLAY REPORT        **
+//***************************
+//DISPLAY  EXEC PGM=IEBGENER,COND=(8,LT)
+//SYSPRINT DD SYSOUT=*
+//SYSUT1   DD DSN=DEMO.VIEW.REPORT,DISP=SHR
+//SYSUT2   DD SYSOUT=*
+//SYSIN    DD DUMMY
+//*
+//***************************
+//*  VERIFY EXECUTION      **
+//***************************
+//VERIFY   EXEC PGM=IEFBR14,COND=(8,LT)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  VIEW EXECUTION SUCCESSFUL - BALANCES AND TRANSACTIONS DISPLAYED
+/*
+//*
+//***************************
+//*  ERROR HANDLING        **
+//***************************
+//ERROR    EXEC PGM=IEFBR14,COND=ONLY
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  VIEW EXECUTION FAILED - CHECK SYSPRINT AND DATASET AVAILABILITY
+/*

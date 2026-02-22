@@ -14,3 +14,8 @@ HOME = "/Users/my-name"
 ZOWE_CLI_HOME = "/Users/my-name/.zowe"
 # Timeout for Zowe CLI commands in milliseconds (default: 5 minutes)
 ZOWE_MCP_EXEC_TIMEOUT_MS = "300000"
+# How long each tool call waits before returning a task_id
+ZOWE_MCP_INLINE_WAIT_MS = "10000"
+# Defaults for zowe_wait_async_task
+ZOWE_MCP_WAIT_TOOL_MAX_WAIT_MS = "55000"
+ZOWE_MCP_WAIT_TOOL_POLL_INTERVAL_MS = "2000"

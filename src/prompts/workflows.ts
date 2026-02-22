@@ -7,6 +7,17 @@ import {
 } from '@gestell/schema/prompts/workflows'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
+const ASYNC_EXECUTION_CONTRACT = `**Tool Execution Contract (mandatory):**
+1. Any zowe tool can return a \`task_id\` instead of final data.
+2. If a \`task_id\` is returned, call \`zowe_wait_async_task\` with:
+   - \`task_id\`: the returned value
+   - \`max_wait_ms\`: 55000
+   - \`poll_interval_ms\`: 2000
+3. If the wait response says "still running", call \`zowe_wait_async_task\` again with the same task_id.
+4. Continue workflow steps only after the task has completed.
+5. If a completed task shows \`Success: false\`, stop and report stderr clearly.
+6. Always include the task_id when reporting progress.`
+
 export function registerPrompts(server: McpServer): void {
 
   server.registerPrompt(
@@ -29,6 +40,8 @@ export function registerPrompts(server: McpServer): void {
 **Context:**
 - The user has access to datasets under the high-level qualifier: ${hlq}
 - They want to understand how mainframe applications are structured
+
+${ASYNC_EXECUTION_CONTRACT}
 
 **Your mission:**
 1. First, use zowe_list_datasets to show what datasets exist under ${hlq}
@@ -71,6 +84,8 @@ Start by listing the datasets and explaining what you find.`
               text: `A z/OS job has failed and I need your help diagnosing the problem.
 
 **Job ID:** ${jobId}
+
+${ASYNC_EXECUTION_CONTRACT}
 
 **Your diagnostic process:**
 1. Use zowe_get_job_status to get the job details and return code
@@ -122,6 +137,8 @@ Begin the diagnosis now.`
 **Application location:** ${hlq}
 ${programClause}
 
+${ASYNC_EXECUTION_CONTRACT}
+
 **Exploration tasks:**
 1. Use zowe_list_datasets to find all related datasets (COBOL, COPYBOOK, JCL, etc.)
 2. Use zowe_list_members to inventory the programs and copybooks
@@ -168,6 +185,8 @@ Be thorough but focus on helping me understand the application's purpose and str
               type: 'text',
               text: `Please review the COBOL code in ${dataset} for quality, correctness, and best practices.
 
+${ASYNC_EXECUTION_CONTRACT}
+
 **Review process:**
 1. Use zowe_read_dataset to retrieve the source code
 2. Analyze the code for:
@@ -210,6 +229,8 @@ Focus on practical issues that could cause production problems.`
             content: {
               type: 'text',
               text: `Perform a daily operations health check for jobs owned by ${owner}.
+
+${ASYNC_EXECUTION_CONTRACT}
 
 **Check process:**
 1. Use zowe_list_jobs to get all recent jobs for owner ${owner}
