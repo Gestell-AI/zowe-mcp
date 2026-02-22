@@ -1,6 +1,6 @@
 {
   "name": "@gestell/zowe-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": false,
   "description": "MCP server for Zowe CLI - enabling AI-powered mainframe operations",
   "main": "dist/index.js",

@@ -11,11 +11,11 @@ const ASYNC_EXECUTION_CONTRACT = `**Tool Execution Contract (mandatory):**
 1. Any zowe tool can return a \`task_id\` instead of final data.
 2. If a \`task_id\` is returned, call \`zowe_wait_async_task\` with:
    - \`task_id\`: the returned value
-   - \`max_wait_ms\`: 55000
+   - \`max_wait_ms\`: 300000
    - \`poll_interval_ms\`: 2000
 3. If the wait response says "still running", call \`zowe_wait_async_task\` again with the same task_id.
 4. Continue workflow steps only after the task has completed.
-5. If a completed task shows \`Success: false\`, stop and report stderr clearly.
+5. If a completed task shows \`Success: false\`, inspect stderr/stdout for runbook-documented recoverable patterns before stopping.
 6. Always include the task_id when reporting progress.`
 
 export function registerPrompts(server: McpServer): void {

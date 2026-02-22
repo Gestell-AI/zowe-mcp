@@ -39,7 +39,7 @@ export type ManagedExecution = ManagedExecutionPending | ManagedExecutionComplet
 
 const tasks = new Map<string, InternalTask>()
 const DEFAULT_INLINE_WAIT_MS = 10_000
-const DEFAULT_WAIT_TOOL_MAX_WAIT_MS = 55_000
+const DEFAULT_WAIT_TOOL_MAX_WAIT_MS = 300_000
 const DEFAULT_WAIT_TOOL_POLL_INTERVAL_MS = 2_000
 const DEFAULT_TASK_TTL_MS = 60 * 60 * 1000
 const DEFAULT_MAX_TASKS = 300

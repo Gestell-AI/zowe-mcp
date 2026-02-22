@@ -13,8 +13,8 @@ Run the VSAM demo using only zowe-mcp-server tools and these instructions:
 Rules:
 - Execute in order.
 - Continue on `CC 0000`, `CC 0004`, or `CC 0008`.
-- Treat any `ABEND` or `CC 0012+` as failure.
-- On first failure: collect full spool, explain error, stop.
+- Treat any `ABEND` or `CC 0012+` as failure unless it matches a documented recoverable signature.
+- On failure: collect full spool first, then apply recoverable-path rules before stopping.
 - Produce a final summary with step/job/retcode table and PASS/FAIL.
 - Use only zowe-mcp-server tools. Never run direct `zowe` CLI commands.
 - If any tool returns `task_id`, always poll with `zowe_wait_async_task` until completion.
@@ -22,5 +22,6 @@ Rules:
 - In bootstrap, always validate/remediate dataset attributes before workflow (critical: `DEMO.SAMPLE.LOAD` must be `RECFM=U`, `LRECL=0`).
 - If libraries are missing, create only missing libraries using `zowe_tso_command`, then upload members.
 - If workflow step fails with `IEW2735S` load-library format mismatch, remediate load library and retry that step once.
+- If `INITVSAM` fails with `IDC3351I` / VSAM I/O RC `116` in `VERIFY ... RECOVER`, continue from step 5 without operator approval, and refresh `DEMO.SAMPLE.JCL(INITVSAM)` from `demo/source/04-initvsam/initvsam.jcl`.
 - Stop only on explicit bootstrap blocking verdicts (`BLOCKED_DATASET_CREATE_FAILED`, `BLOCKED_SOURCE_MISSING`, `BLOCKED_DATASET_ATTRIBUTE_REMEDIATION_FAILED`, `BLOCKED_MEMBER_UPLOAD_FAILED`).
 ```

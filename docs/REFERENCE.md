@@ -89,7 +89,7 @@ This prevents the AI from accidentally executing destructive operations.
 | `ZOWE_MCP_TSO_ACCOUNT` | TSO account to pass as `--account` when required | unset |
 | `ZOWE_MCP_EXEC_TIMEOUT_MS` | Per-command Zowe CLI timeout in milliseconds | `300000` |
 | `ZOWE_MCP_INLINE_WAIT_MS` | How long a tool waits before returning an async `task_id` | `10000` |
-| `ZOWE_MCP_WAIT_TOOL_MAX_WAIT_MS` | Default max wait window for `zowe_wait_async_task` | `55000` |
+| `ZOWE_MCP_WAIT_TOOL_MAX_WAIT_MS` | Default max wait window for `zowe_wait_async_task` | `300000` |
 | `ZOWE_MCP_WAIT_TOOL_POLL_INTERVAL_MS` | Default poll interval for `zowe_wait_async_task` | `2000` |
 | `ZOWE_MCP_TASK_TTL_MS` | How long completed async tasks are retained | `3600000` |
 | `ZOWE_MCP_MAX_TASKS` | Maximum in-memory async task records kept | `300` |

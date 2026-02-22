@@ -32,7 +32,7 @@ Use files from `demo/source/`.
 
 ## Global Rules For Agents
 
-1. Stop on first failing job unless the operator explicitly asks to continue.
+1. Auto-continue known recoverable failures (`IEW2735S` load-library mismatch, and `INITVSAM` `IDC3351I`/VSAM I/O RC 116 in `RECOVER`), applying documented remediation/retry rules first.
 2. For each failed job, capture spool and provide error explanation.
 3. Treat `CC 0000`, `CC 0004`, and `CC 0008` as allowed non-blocking step outcomes.
 4. Persist a run log with step, job id, and return code.
@@ -41,3 +41,4 @@ Use files from `demo/source/`.
 7. Bootstrap must enforce required dataset attributes (especially `DEMO.SAMPLE.LOAD` as `RECFM=U`, `LRECL=0`) before workflow execution.
 8. If `DEMO.SAMPLE.*` is empty during bootstrap, create required libraries and upload required members from `demo/source/`.
 9. If a step fails with `IEW2735S` load-library format mismatch, auto-remediate and retry that step once before declaring workflow failure.
+10. If `INITVSAM` fails only due `IDC3351I` / VSAM I/O RC 116 in `VERIFY ... RECOVER`, do not pause for approval; continue workflow per `20-run-workflow.md`.

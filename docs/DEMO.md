@@ -36,10 +36,11 @@ This demo runbook is MCP-only:
 5. Bootstrap must validate/remediate required dataset attributes before upload/member verification (`DEMO.SAMPLE.LOAD` must be `RECFM=U`, `LRECL=0`).
 6. Agents should upload required members from `demo/source/` via dataset upload tools before member verification.
 7. If a workflow step fails with `IEW2735S` due load-library format mismatch, agents should remediate and retry that step once before hard-failing.
+8. If `INITVSAM` fails with `IDC3351I` / VSAM I/O RC `116` in `VERIFY ... RECOVER`, agents should continue to the next workflow step without operator approval and refresh `DEMO.SAMPLE.JCL(INITVSAM)` from source for future runs.
 
 ## Return Code Policy
 
 For workflow execution steps:
 
 1. Continue on `CC 0000`, `CC 0004`, and `CC 0008`.
-2. Fail on any `ABEND` or `CC 0012` and higher.
+2. Fail on any `ABEND` or `CC 0012` and higher, except documented recoverable signatures handled by runbook auto-remediation/continue rules.
