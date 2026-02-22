@@ -24,3 +24,11 @@ All sample assets are under `demo/source/` and were sourced from the VSAM demo w
 1. Easier for agents to follow than mixed YAML and shell.
 2. Clear modular phases for setup, execute, validate, and recovery.
 3. Human-readable and auditable in PR review.
+
+## Enforcement Rule
+
+This demo runbook is MCP-only:
+
+1. Agents must use `zowe-mcp-server` tools only.
+2. Agents must not execute direct `zowe` CLI commands.
+3. If prerequisites are missing, agents must return `BLOCKED_PRELOAD_REQUIRED` and stop.

@@ -2,6 +2,9 @@
 
 Run these checks after workflow execution.
 
+Use only `zowe-mcp-server` tools. Do not execute direct `zowe` CLI commands.
+If any call returns `task_id`, use `zowe_wait_async_task` until completion.
+
 ## Check 1: Expected Libraries Exist
 
 Verify dataset visibility for these names:

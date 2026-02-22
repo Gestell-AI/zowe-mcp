@@ -2,6 +2,9 @@
 
 Use this playbook when any workflow step fails.
 
+Use only `zowe-mcp-server` tools. Do not execute direct `zowe` CLI commands.
+If any call returns `task_id`, use `zowe_wait_async_task` until completion.
+
 ## Required Actions
 
 1. Fetch full spool using `zowe_get_job_output`.

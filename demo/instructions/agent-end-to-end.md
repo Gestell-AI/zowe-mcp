@@ -15,4 +15,7 @@ Rules:
 - Require CC 0000 for each workflow step.
 - On first failure: collect full spool, explain error, stop.
 - Produce a final summary with step/job/retcode table and PASS/FAIL.
+- Use only zowe-mcp-server tools. Never run direct `zowe` CLI commands.
+- If any tool returns `task_id`, always poll with `zowe_wait_async_task` until completion.
+- If bootstrap reports `BLOCKED_PRELOAD_REQUIRED`, stop and ask operator to preload artifacts.
 ```

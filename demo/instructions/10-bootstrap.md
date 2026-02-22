@@ -1,16 +1,19 @@
-# Bootstrap Instructions (Agent)
+# Bootstrap Verification Instructions (Agent)
 
-Prepare required datasets and upload demo assets before running workflow jobs.
+Verify that demo prerequisites are already staged on z/OS.
+
+Do not create datasets and do not upload members in this step.
+Use only `zowe-mcp-server` tools.
 
 ## Preconditions
 
-1. Zowe connection is valid (`zowe zosmf check status --rfj` succeeds outside this runbook).
-2. Dataset prefix is `DEMO.SAMPLE` unless operator provides override.
-3. Source files are present under `demo/source/`.
+1. Dataset prefix is `DEMO.SAMPLE` unless operator provides override.
+2. Demo assets are expected to already exist on host datasets.
+3. For every tool call returning `task_id`, poll with `zowe_wait_async_task` until completion.
 
-## Step A: Ensure Required PDS Libraries Exist
+## Step A: Verify Required PDS Libraries Exist
 
-Ensure the following libraries are present:
+Use `zowe_list_datasets` and confirm these datasets are present:
 
 - `DEMO.SAMPLE.COBOL`
 - `DEMO.SAMPLE.COPYLIB`
@@ -19,42 +22,53 @@ Ensure the following libraries are present:
 - `DEMO.SAMPLE.LOAD`
 - `DEMO.SAMPLE.SYSDEBUG`
 
-If missing, ask the operator for permission to create them using standard Zowe file creation operations.
+## Step B: Verify Required Copybook Members
 
-## Step B: Upload Copybooks
+Use `zowe_list_members` on `DEMO.SAMPLE.COPYLIB` and confirm:
 
-Upload:
+- `CUSTCOPY`
+- `TXNCOPY`
+- `TRANREC`
 
-- `demo/source/copybooks/CUSTCOPY.cpy` -> `DEMO.SAMPLE.COPYLIB(CUSTCOPY)`
-- `demo/source/copybooks/TXNCOPY.cpy` -> `DEMO.SAMPLE.COPYLIB(TXNCOPY)`
-- `demo/source/copybooks/TRANREC.cpy` -> `DEMO.SAMPLE.COPYLIB(TRANREC)`
+## Step C: Verify Required COBOL Members
 
-## Step C: Upload COBOL Programs
+Use `zowe_list_members` on `DEMO.SAMPLE.COBOL` and confirm:
 
-Upload:
+- `INITVSAM`
+- `SETBAL`
+- `GENTRAN`
+- `PROCTXN`
+- `VIEW`
 
-- `demo/source/04-initvsam/INITVSAM.cbl` -> `DEMO.SAMPLE.COBOL(INITVSAM)`
-- `demo/source/07-setbal/SETBAL.cbl` -> `DEMO.SAMPLE.COBOL(SETBAL)`
-- `demo/source/08-gentran/GENTRAN.cbl` -> `DEMO.SAMPLE.COBOL(GENTRAN)`
-- `demo/source/09-proctxn/PROCTXN.cbl` -> `DEMO.SAMPLE.COBOL(PROCTXN)`
-- `demo/source/10-view/view.cbl` -> `DEMO.SAMPLE.COBOL(VIEW)`
+## Step D: Verify Required JCL Members
 
-## Step D: Upload JCL Members
+Use `zowe_list_members` on `DEMO.SAMPLE.JCL` and confirm:
 
-Upload:
+- `DEFCAT`
+- `DEFACC`
+- `DEFTXN`
+- `INITVSAM`
+- `VERIFY`
+- `CREATEAC`
+- `SETBAL`
+- `GENTRAN`
+- `PROCTXN`
+- `VIEW`
+- `VIEWCOMP`
 
-- `demo/source/01-defcat/defcat.jcl` -> `DEMO.SAMPLE.JCL(DEFCAT)`
-- `demo/source/02-defacc/defacc.jcl` -> `DEMO.SAMPLE.JCL(DEFACC)`
-- `demo/source/03-deftxn/deftxn.jcl` -> `DEMO.SAMPLE.JCL(DEFTXN)`
-- `demo/source/04-initvsam/initvsam.jcl` -> `DEMO.SAMPLE.JCL(INITVSAM)`
-- `demo/source/05-verify/verify.jcl` -> `DEMO.SAMPLE.JCL(VERIFY)`
-- `demo/source/06-createac/createac.jcl` -> `DEMO.SAMPLE.JCL(CREATEAC)`
-- `demo/source/07-setbal/setbal.jcl` -> `DEMO.SAMPLE.JCL(SETBAL)`
-- `demo/source/08-gentran/gentran.jcl` -> `DEMO.SAMPLE.JCL(GENTRAN)`
-- `demo/source/09-proctxn/proctxn.jcl` -> `DEMO.SAMPLE.JCL(PROCTXN)`
-- `demo/source/10-view/view.jcl` -> `DEMO.SAMPLE.JCL(VIEW)`
-- `demo/source/10-view/viewcomp.jcl` -> `DEMO.SAMPLE.JCL(VIEWCOMP)`
+## Failure Contract
+
+If any required dataset/member is missing:
+
+1. Stop immediately with `BLOCKED_PRELOAD_REQUIRED`.
+2. Report exact missing datasets/members.
+3. Tell operator to preload artifacts outside this runbook.
+4. Do not fall back to direct `zowe` CLI operations.
 
 ## Output Contract
 
-Return a concise table of uploaded members and target datasets.
+Return:
+
+1. A table of required datasets with `present/missing`.
+2. A table of required members per library with `present/missing`.
+3. Final bootstrap verdict: `READY` or `BLOCKED_PRELOAD_REQUIRED`.

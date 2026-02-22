@@ -3,10 +3,14 @@
 Submit each job in strict order. For each step:
 
 1. Submit the JCL with `zowe_submit_job`.
-2. Poll with `zowe_get_job_status` until completion.
-3. Require `CC 0000`.
-4. Record `step`, `job_id`, `retcode`.
-5. On failure, switch to `40-failure-handling.md`.
+2. If submit returns `task_id`, poll with `zowe_wait_async_task` until completion.
+3. Poll with `zowe_get_job_status` until completion.
+4. If status returns `task_id`, poll with `zowe_wait_async_task` until completion.
+5. Require `CC 0000`.
+6. Record `step`, `job_id`, `retcode`.
+7. On failure, switch to `40-failure-handling.md`.
+
+Hard rule: use only `zowe-mcp-server` tools. Do not execute direct `zowe` CLI commands.
 
 ## Ordered Steps
 
