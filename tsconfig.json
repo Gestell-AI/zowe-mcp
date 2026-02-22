@@ -3,17 +3,27 @@
     "target": "ES2022",
     "module": "Node16",
     "moduleResolution": "Node16",
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+    "baseUrl": ".",
+    "paths": {
+      "@gestell/mcp": [
+        "src/index.ts"
+      ],
+      "@gestell/mcp/*": [
+        "src/*.ts",
+        "src/*"
+      ],
+      "@gestell/schema": [
+        "schema/index.ts"
+      ],
+      "@gestell/schema/*": [
+        "schema/*.ts",
+        "schema/*"
+      ]
+    }
+  }
 }

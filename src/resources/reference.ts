@@ -1,86 +1,86 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
 export function registerResources(server: McpServer): void {
 
   server.registerResource(
-    "dataset-types",
-    "zos://reference/dataset-types",
+    'dataset-types',
+    'zos://reference/dataset-types',
     {
-      description: "Reference guide for z/OS dataset types and organizations",
-      mimeType: "text/markdown"
+      description: 'Reference guide for z/OS dataset types and organizations',
+      mimeType: 'text/markdown'
     },
     async () => ({
       contents: [{
-        uri: "zos://reference/dataset-types",
-        mimeType: "text/markdown",
+        uri: 'zos://reference/dataset-types',
+        mimeType: 'text/markdown',
         text: DATASET_TYPES_REFERENCE
       }]
     })
-  );
+  )
 
   server.registerResource(
-    "jcl-basics",
-    "zos://reference/jcl-basics",
+    'jcl-basics',
+    'zos://reference/jcl-basics',
     {
-      description: "Quick reference for Job Control Language (JCL) syntax and common patterns",
-      mimeType: "text/markdown"
+      description: 'Quick reference for Job Control Language (JCL) syntax and common patterns',
+      mimeType: 'text/markdown'
     },
     async () => ({
       contents: [{
-        uri: "zos://reference/jcl-basics",
-        mimeType: "text/markdown",
+        uri: 'zos://reference/jcl-basics',
+        mimeType: 'text/markdown',
         text: JCL_BASICS_REFERENCE
       }]
     })
-  );
+  )
 
   server.registerResource(
-    "cobol-structure",
-    "zos://reference/cobol-structure",
+    'cobol-structure',
+    'zos://reference/cobol-structure',
     {
-      description: "Reference guide for COBOL program structure and divisions",
-      mimeType: "text/markdown"
+      description: 'Reference guide for COBOL program structure and divisions',
+      mimeType: 'text/markdown'
     },
     async () => ({
       contents: [{
-        uri: "zos://reference/cobol-structure",
-        mimeType: "text/markdown",
+        uri: 'zos://reference/cobol-structure',
+        mimeType: 'text/markdown',
         text: COBOL_STRUCTURE_REFERENCE
       }]
     })
-  );
+  )
 
   server.registerResource(
-    "abend-codes",
-    "zos://reference/abend-codes",
+    'abend-codes',
+    'zos://reference/abend-codes',
     {
-      description: "Quick reference for common z/OS system and user ABEND codes",
-      mimeType: "text/markdown"
+      description: 'Quick reference for common z/OS system and user ABEND codes',
+      mimeType: 'text/markdown'
     },
     async () => ({
       contents: [{
-        uri: "zos://reference/abend-codes",
-        mimeType: "text/markdown",
+        uri: 'zos://reference/abend-codes',
+        mimeType: 'text/markdown',
         text: ABEND_CODES_REFERENCE
       }]
     })
-  );
+  )
 
   server.registerResource(
-    "zowe-cli",
-    "zos://reference/zowe-cli",
+    'zowe-cli',
+    'zos://reference/zowe-cli',
     {
-      description: "Quick reference for common Zowe CLI commands",
-      mimeType: "text/markdown"
+      description: 'Quick reference for common Zowe CLI commands',
+      mimeType: 'text/markdown'
     },
     async () => ({
       contents: [{
-        uri: "zos://reference/zowe-cli",
-        mimeType: "text/markdown",
+        uri: 'zos://reference/zowe-cli',
+        mimeType: 'text/markdown',
         text: ZOWE_CLI_REFERENCE
       }]
     })
-  );
+  )
 }
 
 const DATASET_TYPES_REFERENCE = `# z/OS Dataset Types Reference
@@ -136,7 +136,7 @@ const DATASET_TYPES_REFERENCE = `# z/OS Dataset Types Reference
 - **BLKSIZE**: Block Size (bytes per physical block)
 - **DSORG**: Dataset Organization (PS, PO, VS)
 - **VOL**: Volume serial where dataset resides
-`;
+`
 
 const JCL_BASICS_REFERENCE = `# JCL (Job Control Language) Quick Reference
 
@@ -206,7 +206,7 @@ Abnormal:    DELETE, KEEP, CATLG, UNCATLG
 | IEBCOPY | Copy PDS members |
 | SORT | Sort and merge data |
 | IDCAMS | VSAM utility |
-`;
+`
 
 const COBOL_STRUCTURE_REFERENCE = `# COBOL Program Structure Reference
 
@@ -298,7 +298,7 @@ const COBOL_STRUCTURE_REFERENCE = `# COBOL Program Structure Reference
 | 66 | RENAMES clause |
 | 77 | Independent items |
 | 88 | Condition names (flags) |
-`;
+`
 
 const ABEND_CODES_REFERENCE = `# Common z/OS ABEND Codes Quick Reference
 
@@ -355,7 +355,7 @@ User ABENDs are defined by applications. Common ones:
 3. **Review the SYSUDUMP/SYSABEND** - memory dump for analysis
 4. **Check DD statements** - ensure all required DDs are present
 5. **Verify dataset attributes** - RECFM, LRECL, BLKSIZE must match
-`;
+`
 
 const ZOWE_CLI_REFERENCE = `# Zowe CLI Quick Reference
 
@@ -444,4 +444,4 @@ zowe zos-files list ds "HLQ"
 | --help | Show command help |
 | --zosmf-profile | Use specific profile |
 | -d, --debug | Show debug output |
-`;
+`

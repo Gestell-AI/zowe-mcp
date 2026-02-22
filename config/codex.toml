@@ -1,0 +1,16 @@
+[mcp_servers.zowe-mcp-server]
+command = "node"
+args = ["/Users/chriscates/Projects/gestell/zowe/zowe-mcp-server/dist/index.js"]
+startup_timeout_sec = 60
+
+[mcp_servers.zowe-mcp-server.env]
+ZOWE_MCP_BASE_PROFILE = "global_base"
+ZOWE_MCP_ZOSMF_PROFILE = "zosmf"
+ZOWE_MCP_TSO_PROFILE = "tso"
+# if your environment requires it, set your associated account number:
+ZOWE_MCP_TSO_ACCOUNT = "ACCT001"
+# Make sure to set your absolute path to your zowe home
+HOME = "/Users/my-name"
+ZOWE_CLI_HOME = "/Users/my-name/.zowe"
+# Timeout for Zowe CLI commands in milliseconds (default: 5 minutes)
+ZOWE_MCP_EXEC_TIMEOUT_MS = "300000"

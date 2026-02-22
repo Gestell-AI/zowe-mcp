@@ -1,25 +1,29 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
+import {
+  codeReviewArgsSchema,
+  dailyOpsCheckArgsSchema,
+  diagnoseJobFailureArgsSchema,
+  exploreCodebaseArgsSchema,
+  onboardingArgsSchema
+} from '@gestell/schema/prompts/workflows'
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
 export function registerPrompts(server: McpServer): void {
 
   server.registerPrompt(
-    "onboarding",
+    'onboarding',
     {
-      title: "Mainframe Onboarding",
-      description: "Interactive onboarding for new mainframe developers. Guides through exploring datasets, understanding job flows, and reading COBOL code.",
-      argsSchema: {
-        hlq: z.string().optional().describe("High-level qualifier (user ID or project prefix) to explore, e.g., DEVUSR1")
-      }
+      title: 'Mainframe Onboarding',
+      description: 'Interactive onboarding for new mainframe developers. Guides through exploring datasets, understanding job flows, and reading COBOL code.',
+      argsSchema: onboardingArgsSchema
     },
     async (args) => {
-      const hlq = args.hlq || "DEVUSR1";
+      const hlq = args.hlq || 'DEVUSR1'
       return {
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: {
-              type: "text",
+              type: 'text',
               text: `You are helping a developer who is new to z/OS mainframes. Guide them through an interactive exploration of the mainframe environment.
 
 **Context:**
@@ -45,27 +49,25 @@ Start by listing the datasets and explaining what you find.`
             }
           }
         ]
-      };
+      }
     }
-  );
+  )
 
   server.registerPrompt(
-    "diagnose-job-failure",
+    'diagnose-job-failure',
     {
-      title: "Diagnose Job Failure",
-      description: "Diagnose why a z/OS job failed. Analyzes job output, identifies error codes, and suggests fixes.",
-      argsSchema: {
-        job_id: z.string().describe("The job ID to diagnose (e.g., JOB00245)")
-      }
+      title: 'Diagnose Job Failure',
+      description: 'Diagnose why a z/OS job failed. Analyzes job output, identifies error codes, and suggests fixes.',
+      argsSchema: diagnoseJobFailureArgsSchema
     },
     async (args) => {
-      const jobId = args.job_id || "JOB00245";
+      const jobId = args.job_id || 'JOB00245'
       return {
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: {
-              type: "text",
+              type: 'text',
               text: `A z/OS job has failed and I need your help diagnosing the problem.
 
 **Job ID:** ${jobId}
@@ -93,31 +95,28 @@ Begin the diagnosis now.`
             }
           }
         ]
-      };
+      }
     }
-  );
+  )
 
   server.registerPrompt(
-    "explore-codebase",
+    'explore-codebase',
     {
-      title: "Explore COBOL Codebase",
-      description: "Explore and understand a COBOL application codebase. Maps program relationships, copybook usage, and data flows.",
-      argsSchema: {
-        hlq: z.string().describe("High-level qualifier containing the application code"),
-        program: z.string().optional().describe("Specific program name to start with")
-      }
+      title: 'Explore COBOL Codebase',
+      description: 'Explore and understand a COBOL application codebase. Maps program relationships, copybook usage, and data flows.',
+      argsSchema: exploreCodebaseArgsSchema
     },
     async (args) => {
-      const hlq = args.hlq || "DEVUSR1";
-      const program = args.program;
-      const programClause = program ? `Start with the program: ${program}` : "Start by listing available programs and pick one that looks like a main entry point.";
+      const hlq = args.hlq || 'DEVUSR1'
+      const program = args.program
+      const programClause = program ? `Start with the program: ${program}` : 'Start by listing available programs and pick one that looks like a main entry point.'
 
       return {
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: {
-              type: "text",
+              type: 'text',
               text: `I need to understand a COBOL application. Help me explore and document its structure.
 
 **Application location:** ${hlq}
@@ -148,27 +147,25 @@ Be thorough but focus on helping me understand the application's purpose and str
             }
           }
         ]
-      };
+      }
     }
-  );
+  )
 
   server.registerPrompt(
-    "code-review",
+    'code-review',
     {
-      title: "COBOL Code Review",
-      description: "Review COBOL code for issues, best practices, and potential improvements.",
-      argsSchema: {
-        dataset: z.string().describe("Dataset(member) containing the code to review, e.g., DEVUSR1.COBOL(PAYROLL)")
-      }
+      title: 'COBOL Code Review',
+      description: 'Review COBOL code for issues, best practices, and potential improvements.',
+      argsSchema: codeReviewArgsSchema
     },
     async (args) => {
-      const dataset = args.dataset || "DEVUSR1.COBOL(PAYROLL)";
+      const dataset = args.dataset || 'DEVUSR1.COBOL(PAYROLL)'
       return {
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: {
-              type: "text",
+              type: 'text',
               text: `Please review the COBOL code in ${dataset} for quality, correctness, and best practices.
 
 **Review process:**
@@ -193,27 +190,25 @@ Focus on practical issues that could cause production problems.`
             }
           }
         ]
-      };
+      }
     }
-  );
+  )
 
   server.registerPrompt(
-    "daily-ops-check",
+    'daily-ops-check',
     {
-      title: "Daily Operations Check",
-      description: "Perform a daily operations check - review recent jobs, identify failures, and summarize system health.",
-      argsSchema: {
-        owner: z.string().optional().describe("Job owner to check (user ID or * for all)")
-      }
+      title: 'Daily Operations Check',
+      description: 'Perform a daily operations check - review recent jobs, identify failures, and summarize system health.',
+      argsSchema: dailyOpsCheckArgsSchema
     },
     async (args) => {
-      const owner = args.owner || "DEVUSR1";
+      const owner = args.owner || 'DEVUSR1'
       return {
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: {
-              type: "text",
+              type: 'text',
               text: `Perform a daily operations health check for jobs owned by ${owner}.
 
 **Check process:**
@@ -251,7 +246,7 @@ Generate this report now.`
             }
           }
         ]
-      };
+      }
     }
-  );
+  )
 }

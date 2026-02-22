@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "zowe-mcp-server": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/zowe-mcp-server/dist/index.js"],
+      "env": {
+        "ZOWE_MCP_MOCK": "false",
+        "ZOWE_MCP_BASE_PROFILE": "base",
+        "ZOWE_MCP_ZOSMF_PROFILE": "zosmf",
+        "ZOWE_MCP_TSO_PROFILE": "tso",
+        "ZOWE_MCP_TSO_ACCOUNT": "ACCT001",
+        "ZOWE_MCP_EXEC_TIMEOUT_MS": "300000",
+        "ZOWE_CLI_HOME": "/ABSOLUTE/PATH/TO/custom-zowe-home",
+        "NODE_EXTRA_CA_CERTS": "/ABSOLUTE/PATH/TO/ca-chain.pem"
+      }
+    }
+  }
+}
