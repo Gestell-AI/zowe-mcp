@@ -5,7 +5,7 @@ import {
 } from '@gestell/schema/tools/async-tasks'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
-import { listAsyncTasks, getAsyncTask, waitOnAsyncTask } from '../services/zowe-async-tasks.js'
+import { getAsyncTask, listAsyncTasks, waitOnAsyncTask } from '../services/zowe-async-tasks.js'
 
 export function registerAsyncTaskTools(server: McpServer): void {
   server.registerTool(

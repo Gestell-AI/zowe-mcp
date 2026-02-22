@@ -16,7 +16,7 @@ Trigger this playbook when:
 
 ## Required Actions
 
-1. Fetch full spool using `zowe_get_job_output`.
+1. Fetch full spool using `zowe_get_job_output`. If output is truncated, run `zowe_list_job_spool_files` and then `zowe_get_job_spool_file` to extract required DDs (`JESYSMSG`, compile/link `SYSPRINT`) in pages.
 2. Extract ABEND/CC indicators from output.
 3. Explain the code using `zowe_explain_error`.
 4. Summarize probable root cause in one paragraph.

@@ -9,6 +9,7 @@ export function getMockResponse(command: string, args: string[]): ZoweResult {
 
   if (fullCommand.startsWith('zos-jobs list jobs')) return mockListJobs(args)
   if (fullCommand.startsWith('zos-jobs view job-status-by-jobid')) return mockJobStatus(args)
+  if (fullCommand.startsWith('zos-jobs list spool-files-by-jobid')) return mockListSpoolFiles(args)
   if (fullCommand.startsWith('zos-jobs view spool-file-by-id') || fullCommand.startsWith('zos-jobs view all-spool-content')) return mockSpoolContent(args)
   if (fullCommand.startsWith('zos-jobs submit')) return mockSubmitJob(args)
   if (fullCommand.startsWith('zos-files list ds') || fullCommand.startsWith('zos-files list data-set')) return mockListDatasets(args)
@@ -52,6 +53,27 @@ function mockJobStatus(args: string[]): ZoweResult {
   }
   const job = jobMap[jobId || ''] || jobMap['JOB00142']
   const data = { success: true, exitCode: 0, message: '', data: job }
+  return { success: true, stdout: JSON.stringify(data, null, 2), stderr: '', data, exitCode: 0 }
+}
+
+function mockListSpoolFiles(args: string[]): ZoweResult {
+  const jobId = extractPositional(args) || 'JOB00142'
+  const items = [
+    { id: 1, ddname: 'JESMSGLG', stepname: 'JES2', procstep: '', records: 120 },
+    { id: 2, ddname: 'JESJCL', stepname: 'JES2', procstep: '', records: 55 },
+    { id: 3, ddname: 'JESYSMSG', stepname: 'JES2', procstep: '', records: 210 },
+    { id: 4, ddname: 'SYSPRINT', stepname: 'COMPILE', procstep: '', records: 160 },
+    { id: 5, ddname: 'SYSPRINT', stepname: 'LINK', procstep: '', records: 95 }
+  ]
+  const data = {
+    success: true,
+    exitCode: 0,
+    message: '',
+    data: {
+      jobid: jobId,
+      items
+    }
+  }
   return { success: true, stdout: JSON.stringify(data, null, 2), stderr: '', data, exitCode: 0 }
 }
 
@@ -212,6 +234,7 @@ function extractPositionals(args: string[]): string[] {
     '--base-profile',
     '--command',
     '--data-set',
+    '--encoding',
     '--jobid',
     '--owner',
     '--prefix',

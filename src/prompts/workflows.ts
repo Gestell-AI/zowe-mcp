@@ -89,7 +89,8 @@ ${ASYNC_EXECUTION_CONTRACT}
 
 **Your diagnostic process:**
 1. Use zowe_get_job_status to get the job details and return code
-2. Use zowe_get_job_output to retrieve the full spool output
+2. Use zowe_get_job_output to retrieve the full spool output.
+   - If the output is truncated, use zowe_list_job_spool_files and zowe_get_job_spool_file to extract JESYSMSG and relevant SYSPRINT DDs in pages.
 3. Analyze the output for:
    - ABEND codes (S0C7, S0C4, S013, etc.)
    - Non-zero condition codes (CC 0004, 0008, 0012, etc.)

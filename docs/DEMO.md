@@ -37,6 +37,7 @@ This demo runbook is MCP-only:
 6. Agents should upload required members from `demo/source/` via dataset upload tools before member verification.
 7. If a workflow step fails with `IEW2735S` due load-library format mismatch, agents should remediate and retry that step once before hard-failing.
 8. If `INITVSAM` fails with `IDC3351I` / VSAM I/O RC `116` in `VERIFY ... RECOVER`, agents should continue to the next workflow step without operator approval and refresh `DEMO.SAMPLE.JCL(INITVSAM)` from source for future runs.
+9. If full spool output is truncated, agents should use `zowe_list_job_spool_files` and `zowe_get_job_spool_file` for targeted DD extraction (`JESYSMSG`, `SYSPRINT`) instead of blocking.
 
 ## Return Code Policy
 

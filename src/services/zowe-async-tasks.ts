@@ -1,4 +1,4 @@
-import { ZoweResult, executeZowe } from '@gestell/mcp/services/zowe-executor'
+import { executeZowe,ZoweResult } from '@gestell/mcp/services/zowe-executor'
 import { randomUUID } from 'crypto'
 
 type TaskStatus = 'running' | 'completed'

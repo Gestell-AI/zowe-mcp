@@ -5,8 +5,8 @@ import {
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 
 import { CommandSafety } from '../constants.js'
-import { executeZoweManaged, formatPendingTaskMessage } from '../services/zowe-async-tasks.js'
 import { classifyConsoleCommand,classifyTsoCommand } from '../services/guardrails.js'
+import { executeZoweManaged, formatPendingTaskMessage } from '../services/zowe-async-tasks.js'
 import { withZoweOptions } from '../services/zowe-options.js'
 
 export function registerTsoTools(server: McpServer): void {

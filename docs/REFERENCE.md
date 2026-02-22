@@ -20,6 +20,8 @@
 | `zowe_list_jobs` | List jobs by owner, prefix, or status |
 | `zowe_get_job_status` | Get detailed status of a job |
 | `zowe_get_job_output` | Retrieve spool output (with automatic error analysis) |
+| `zowe_list_job_spool_files` | List JES spool DD entries for a job |
+| `zowe_get_job_spool_file` | Retrieve a specific spool DD by file ID with paging support |
 | `zowe_submit_job` | Submit a JCL job from a dataset |
 
 ### Command Tools

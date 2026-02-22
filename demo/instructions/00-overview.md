@@ -15,6 +15,8 @@ Use files from `demo/source/`.
 - `zowe_submit_job`
 - `zowe_get_job_status`
 - `zowe_get_job_output`
+- `zowe_list_job_spool_files`
+- `zowe_get_job_spool_file`
 - `zowe_list_datasets`
 - `zowe_list_members`
 - `zowe_upload_file_to_dataset`

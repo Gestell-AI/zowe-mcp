@@ -403,6 +403,10 @@ zowe zos-jobs view job-status-by-jobid JOB00123
 
 # View spool output
 zowe zos-jobs view all-spool-content --jobid JOB00123
+
+# List spool DDs, then pull one DD by ID (useful when full output is too large)
+zowe zos-jobs list spool-files-by-jobid JOB00123 --rfj
+zowe zos-jobs view spool-file-by-id JOB00123 3
 \`\`\`
 
 ## TSO Commands

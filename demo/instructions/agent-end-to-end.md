@@ -15,6 +15,7 @@ Rules:
 - Continue on `CC 0000`, `CC 0004`, or `CC 0008`.
 - Treat any `ABEND` or `CC 0012+` as failure unless it matches a documented recoverable signature.
 - On failure: collect full spool first, then apply recoverable-path rules before stopping.
+- If full spool output is truncated, use `zowe_list_job_spool_files` and `zowe_get_job_spool_file` to fetch `JESYSMSG` and relevant `SYSPRINT` DDs in pages.
 - Produce a final summary with step/job/retcode table and PASS/FAIL.
 - Use only zowe-mcp-server tools. Never run direct `zowe` CLI commands.
 - If any tool returns `task_id`, always poll with `zowe_wait_async_task` until completion.
