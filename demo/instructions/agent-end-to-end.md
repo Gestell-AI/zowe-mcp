@@ -18,7 +18,9 @@ Rules:
 - Produce a final summary with step/job/retcode table and PASS/FAIL.
 - Use only zowe-mcp-server tools. Never run direct `zowe` CLI commands.
 - If any tool returns `task_id`, always poll with `zowe_wait_async_task` until completion.
-- In bootstrap, if required `DEMO.SAMPLE.*` libraries already exist, skip allocation and immediately upload members.
+- In bootstrap, if required `DEMO.SAMPLE.*` libraries already exist, skip allocation and immediately validate/remediate attributes, then upload members.
+- In bootstrap, always validate/remediate dataset attributes before workflow (critical: `DEMO.SAMPLE.LOAD` must be `RECFM=U`, `LRECL=0`).
 - If libraries are missing, create only missing libraries using `zowe_tso_command`, then upload members.
-- Stop only on explicit bootstrap blocking verdicts (`BLOCKED_DATASET_CREATE_FAILED`, `BLOCKED_SOURCE_MISSING`, `BLOCKED_MEMBER_UPLOAD_FAILED`).
+- If workflow step fails with `IEW2735S` load-library format mismatch, remediate load library and retry that step once.
+- Stop only on explicit bootstrap blocking verdicts (`BLOCKED_DATASET_CREATE_FAILED`, `BLOCKED_SOURCE_MISSING`, `BLOCKED_DATASET_ATTRIBUTE_REMEDIATION_FAILED`, `BLOCKED_MEMBER_UPLOAD_FAILED`).
 ```

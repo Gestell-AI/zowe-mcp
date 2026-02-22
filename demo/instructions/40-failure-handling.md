@@ -10,6 +10,7 @@ Trigger this playbook when:
 - Any step returns `ABEND`
 - Any step returns `CC 0012` or higher
 - Any step returns unknown/unparseable retcode
+- The failure is not the known recoverable `IEW2735S` load-library format mismatch case already retried once in workflow execution.
 
 ## Required Actions
 

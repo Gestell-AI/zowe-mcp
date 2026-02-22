@@ -5,3 +5,4 @@ dist/
 !src/**/*.d.ts
 .env
 .DS_Store
+demo/output

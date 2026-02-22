@@ -14,6 +14,16 @@
 /*
 //*
 //***************************
+//*  RECOVER VSAM STATE    **
+//***************************
+//RECOVER  EXEC PGM=IDCAMS,COND=(8,LT)
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  VERIFY DATASET(DEMO.ACCOUNTS.CLUSTER) RECOVER
+  VERIFY DATASET(DEMO.TXN.CLUSTER) RECOVER
+/*
+//*
+//***************************
 //*  COMPILE INITVSAM      **
 //***************************
 //COMPILE  EXEC PROC=ELAXFCOC,

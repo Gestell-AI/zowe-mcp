@@ -31,9 +31,11 @@ This demo runbook is MCP-only:
 
 1. Agents must use `zowe-mcp-server` tools only.
 2. Agents must not execute direct `zowe` CLI commands.
-3. During bootstrap, if required `DEMO.SAMPLE.*` libraries already exist, agents should skip allocation and go straight to member upload.
+3. During bootstrap, if required `DEMO.SAMPLE.*` libraries already exist, agents should skip allocation and go straight to attribute validation/remediation, then member upload.
 4. If required libraries are missing, agents should create only the missing ones via `zowe_tso_command`.
-5. Agents should upload required members from `demo/source/` via dataset upload tools before member verification.
+5. Bootstrap must validate/remediate required dataset attributes before upload/member verification (`DEMO.SAMPLE.LOAD` must be `RECFM=U`, `LRECL=0`).
+6. Agents should upload required members from `demo/source/` via dataset upload tools before member verification.
+7. If a workflow step fails with `IEW2735S` due load-library format mismatch, agents should remediate and retry that step once before hard-failing.
 
 ## Return Code Policy
 

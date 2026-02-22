@@ -38,4 +38,6 @@ Use files from `demo/source/`.
 4. Persist a run log with step, job id, and return code.
 5. Use only `zowe-mcp-server` tools; do not run direct `zowe` CLI commands.
 6. For any tool call that returns `task_id`, poll with `zowe_wait_async_task` until completion.
-7. If `DEMO.SAMPLE.*` is empty during bootstrap, create required libraries and upload required members from `demo/source/`.
+7. Bootstrap must enforce required dataset attributes (especially `DEMO.SAMPLE.LOAD` as `RECFM=U`, `LRECL=0`) before workflow execution.
+8. If `DEMO.SAMPLE.*` is empty during bootstrap, create required libraries and upload required members from `demo/source/`.
+9. If a step fails with `IEW2735S` load-library format mismatch, auto-remediate and retry that step once before declaring workflow failure.
