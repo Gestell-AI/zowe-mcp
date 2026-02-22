@@ -3,8 +3,8 @@ import { z } from 'zod'
 export const listJobsInputSchema = {
   /** Optional JES owner filter (for example: `IBMUSER`). */
   owner: z.string().optional().describe('Job owner userid'),
-  /** Optional job name prefix filter (for example: `PAY*`). */
-  prefix: z.string().optional().describe('Job name prefix (e.g., PAYROLL*)'),
+  /** Optional job name prefix filter (for example: `PAYROLL`). Do not include `*`; wildcard suffixes are normalized automatically. */
+  prefix: z.string().optional().describe('Job name prefix (e.g., PAYROLL)'),
   /** Optional local status filter to narrow the result set. */
   status: z.enum(['ACTIVE', 'OUTPUT', 'INPUT']).optional().describe('Job status filter'),
   /** Optional z/OSMF profile override for this single call. */

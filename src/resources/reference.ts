@@ -393,7 +393,7 @@ zowe zos-files upload ftds local.txt "HLQ.DATA"
 \`\`\`bash
 # List jobs
 zowe zos-jobs list jobs
-zowe zos-jobs list jobs --owner MYUSER --prefix PAY*
+zowe zos-jobs list jobs --owner MYUSER --prefix PAY
 
 # Submit job
 zowe zos-jobs submit ds "HLQ.JCL(MYJOB)"

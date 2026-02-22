@@ -16,14 +16,14 @@ export function registerJobTools(server: McpServer): void {
     'zowe_list_jobs',
     {
       title: 'List z/OS Jobs',
-      description: 'List jobs on the z/OS system, optionally filtered by owner, prefix, or status.\n\nUse this to see what jobs exist, which are running, which have completed, and their return codes.\n\nArgs:\n  - owner (string, optional): Job owner userid\n  - prefix (string, optional): Job name prefix filter (e.g., "PAY*")\n  - status (string, optional): Local status filter - "ACTIVE", "OUTPUT", "INPUT"',
+      description: 'List jobs on the z/OS system, optionally filtered by owner, prefix, or status.\n\nUse this to see what jobs exist, which are running, which have completed, and their return codes.\n\nArgs:\n  - owner (string, optional): Job owner userid\n  - prefix (string, optional): Job name prefix filter (e.g., "PAYROLL", not "PAYROLL*")\n  - status (string, optional): Local status filter - "ACTIVE", "OUTPUT", "INPUT"',
       inputSchema: listJobsInputSchema,
       annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
     },
     async (params) => {
       const args: string[] = []
       if (params.owner) args.push('--owner', params.owner)
-      if (params.prefix) args.push('--prefix', params.prefix)
+      if (params.prefix) args.push('--prefix', normalizeJobPrefix(params.prefix))
       args.push('--rfj')
       const resolvedArgs = withZoweOptions(args, params, { allowZosmfProfile: true })
 
@@ -193,4 +193,10 @@ export function registerJobTools(server: McpServer): void {
       }
     }
   )
+}
+
+function normalizeJobPrefix(prefix: string): string {
+  const trimmed = prefix.trim()
+  // z/OSMF rejects wildcard characters in prefix query params.
+  return trimmed.replace(/\*+$/g, '')
 }
