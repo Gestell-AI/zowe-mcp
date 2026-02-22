@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "zowe-mcp-server": {
-      "command": "node",
-      "args": ["/ABSOLUTE/PATH/TO/zowe-mcp-server/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "@gestell/zowe-mcp"],
       "env": {
         "ZOWE_MCP_MOCK": "false",
         "ZOWE_MCP_BASE_PROFILE": "base",

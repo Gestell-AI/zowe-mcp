@@ -1,6 +1,6 @@
 [mcp_servers.zowe-mcp-server]
-command = "node"
-args = ["/Users/chriscates/Projects/gestell/zowe/zowe-mcp-server/dist/index.js"]
+command = "npx"
+args = ["-y", "@gestell/zowe-mcp"]
 startup_timeout_sec = 60
 
 [mcp_servers.zowe-mcp-server.env]

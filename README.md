@@ -77,9 +77,10 @@ For other MCP clients that accept JSON MCP server definitions, use the same `con
 
 Codex using `.toml` configs which can be seen in `config/codex.toml`
 
-Replace the placeholder path in both files:
+Both templates are preconfigured to launch from npm with:
 
-- `/ABSOLUTE/PATH/TO/zowe-mcp-server/dist/index.js`
+- `command`: `npx`
+- `args`: `["-y", "@gestell/zowe-mcp"]`
 
 ## Example Conversations
 

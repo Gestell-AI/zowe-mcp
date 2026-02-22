@@ -1,0 +1,24 @@
+# Keep package lean: publish runtime build + core docs only.
+
+# VCS / local
+.git/
+.gitignore
+.DS_Store
+.env
+
+# Development sources and tooling
+src/
+schema/
+test/
+docs/
+demo/
+config/
+script/
+node_modules/
+tsconfig*.json
+eslint.config.ts
+bun.lock
+
+# Ensure runtime output is published
+!dist/
+!dist/**
