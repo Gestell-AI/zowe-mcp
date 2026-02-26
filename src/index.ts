@@ -5,9 +5,11 @@ import { registerResources } from '@gestell/mcp/resources/reference'
 import { executeZowe } from '@gestell/mcp/services/zowe-executor.js'
 import { registerAsyncTaskTools } from '@gestell/mcp/tools/async-tasks'
 import { registerDatasetTools } from '@gestell/mcp/tools/datasets'
+import { registerDb2Tools } from '@gestell/mcp/tools/db2'
 import { registerErrorTools } from '@gestell/mcp/tools/errors'
 import { registerJobTools } from '@gestell/mcp/tools/jobs'
 import { registerTsoTools } from '@gestell/mcp/tools/tso'
+import { registerUssTools } from '@gestell/mcp/tools/uss'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 
@@ -47,6 +49,8 @@ async function main(): Promise<void> {
   registerTsoTools(server)
   registerErrorTools(server)
   registerAsyncTaskTools(server)
+  registerDb2Tools(server)
+  registerUssTools(server)
 
   // Register prompts (pre-built workflows)
   registerPrompts(server)
