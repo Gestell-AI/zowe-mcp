@@ -2,6 +2,7 @@
 
 # VCS / local
 .git/
+.github/
 .gitignore
 .DS_Store
 .env
@@ -10,7 +11,7 @@
 src/
 schema/
 test/
-docs/
+coverage/
 demo/
 config/
 script/

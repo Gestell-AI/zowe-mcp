@@ -4,7 +4,7 @@ args = ["-y", "@gestell/zowe-mcp"]
 startup_timeout_sec = 60
 
 [mcp_servers.zowe-mcp-server.env]
-ZOWE_MCP_BASE_PROFILE = "global_base"
+ZOWE_MCP_BASE_PROFILE = "project_base"
 ZOWE_MCP_ZOSMF_PROFILE = "zosmf"
 ZOWE_MCP_TSO_PROFILE = "tso"
 # if your environment requires it, set your associated account number:

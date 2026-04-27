@@ -1,121 +1,62 @@
 # Zowe MCP Server
 
-An MCP (Model Context Protocol) server that wraps Zowe CLI, enabling AI assistants like Claude to interact with z/OS mainframes through natural language.
+[![npm](https://img.shields.io/npm/v/%40gestell%2Fzowe-mcp?label=npm)](https://www.npmjs.com/package/@gestell/zowe-mcp)
+[![CI](https://github.com/Gestell-AI/zowe-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Gestell-AI/zowe-mcp/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/Gestell-AI/zowe-mcp/branch/main/graph/badge.svg)](https://app.codecov.io/github/Gestell-AI/zowe-mcp)
 
-## What This Does
-
-Instead of learning dozens of Zowe CLI commands, developers can ask an AI assistant questions like:
-
-- "Show me what datasets I have access to"
-- "Why did the payroll job fail last night?"
-- "Show me the COBOL source for the payroll program"
-- "Help me understand this COBOL application"
-
-The MCP server translates these into the right Zowe CLI calls and returns results the AI can explain in plain English.
-
-## Architecture
-
-```arch
-User <-> AI Assistant <-> MCP Protocol <-> This Server <-> Zowe CLI <-> z/OS
-```
-
-## Features
-
-- **19 Tools** for interacting with z/OS (datasets, jobs, targeted JES spool extraction, uploads, TSO, console commands, async polling)
-- **5 Pre-built Prompts** for common workflows (onboarding, diagnostics, code review)
-- **5 Reference Resources** for z/OS concepts (JCL, COBOL, ABEND codes)
-- **Safety Guardrails** that block destructive commands (DELETE, CANCEL, PURGE)
-- **Mock Mode** for demos and development without a live mainframe
-- **Automatic Error Analysis** that explains ABEND codes and return codes
+An MCP (Model Context Protocol) server that wraps Zowe CLI so AI assistants can inspect datasets, jobs, spool output, TSO commands, console output, and common z/OS reference material through natural language.
 
 ## Quick Start
 
-To develop and customize this MCP view [Development Instructions](./docs/DEV.md)
+Run the published package with `npx`:
 
-To learn the full command reference for this MCP view [MCP Reference](./docs/REFERENCE.md)
+```bash
+npx -y @gestell/zowe-mcp
+```
 
-To run the end-to-end VSAM guided demo [Demo Workflow](./docs/DEMO.md)
-
-### 1) Install and Build
+For local development:
 
 ```bash
 bun install
 bun run build
+bun run test
 ```
 
-### 2) Zowe Setup
+## Prerequisites
 
-Use one of these setup paths once on the machine running this MCP server:
+Install and configure Zowe CLI on the machine that will run this MCP server. Verify the active profile before connecting an MCP client:
 
 ```bash
-# Direct z/OSMF
-# Use this when your host responds on /zosmf/info and does not expose API ML at /gateway/api/v1/...
-zowe config init
-# Enter your host, port (10443 is common), username, password, and certificate settings
-# After config is saved, make sure your ~/.zowe/zowe.config.json and selected profile are correct
-
-# Verify you can connect to your Z machine
 zowe zosmf check status --rfj
-
-# API ML / APIML gateway
-# Use this only when the target host exposes the API Mediation Layer gateway
-zowe config auto-init --host "Z.SERVER.IP.OR.HOST"
-# Enter port (default is 10443 for Liberty Server)
-# Enter username and password
-# After config is saved, make sure your ~/.zowe/zowe.config.json and selected profile are correct
-
-# If using the APIML auth gateway
-zowe auth login apiml
-
-# Verify you can connect to your Z machine
-zowe zosmf check status --rfj
-
-# Optional, but recommended if your TSO profile requires account:
-# zowe profiles create tso mytso --account ACCT001
-# You can get your account number via `tsocmd "LISTUSER MY_USER_ID TSO NORACF"`
 ```
 
-`zowe config auto-init` calls the API ML gateway login endpoint at `/gateway/api/v1/auth/login`.
-If that endpoint returns `404 Not Found`, your target likely exposes z/OSMF directly but not API ML, so use `zowe config init` instead.
+If this command fails, fix Zowe authentication/profile configuration first. See [Configuration](./docs/CONFIGURATION.md) for direct z/OSMF, API ML, profile, timeout, and certificate options.
 
-If `zowe zosmf check status --rfj` fails, fix auth/profile first before starting this server.
+## MCP Client Setup
 
-### 3) Configure Your MCP Client
+Claude Desktop and other JSON-based MCP clients can use this server definition:
 
-For Claude Desktop, use `config/mcp.json` as your template and copy the `zowe-mcp-server` entry into:
+```json
+{
+  "mcpServers": {
+    "zowe-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "@gestell/zowe-mcp"]
+    }
+  }
+}
+```
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+For Codex, use the TOML example in [config/codex.toml](./config/codex.toml). For full environment-variable options, see [Configuration](./docs/CONFIGURATION.md).
 
-For other MCP clients that accept JSON MCP server definitions, use the same `config/mcp.json`.
+## Documentation
 
-Codex using `.toml` configs which can be seen in `config/codex.toml`
+| Guide | Purpose |
+|---|---|
+| [Configuration](./docs/CONFIGURATION.md) | Zowe CLI setup, MCP client config, profiles, mock mode, and runtime environment variables |
+| [MCP Reference](./docs/REFERENCE.md) | Tools, prompts, resources, guardrails, and example requests |
+| [Architecture](./docs/ARCHITECTURE.md) | Capabilities, runtime flow, component boundaries, safety model, and async task behavior |
+| [Development](./docs/DEV.md) | Local build, test, and development workflow |
+| [Demo Workflow](./docs/DEMO.md) | Agent-first VSAM demo runbook |
 
-Both templates are preconfigured to launch from npm with:
-
-- `command`: `npx`
-- `args`: `["-y", "@gestell/zowe-mcp"]`
-
-## Example Conversations
-
-### Exploring Datasets
->
-> **User**: Use the zowe-mcp-server tool and show me what datasets I have under DEVUSR1
->
-> **AI**: *Uses zowe_list_datasets* - I found 8 datasets under DEVUSR1. You have COBOL source libraries, JCL, copybooks, and data files...
-
-### Diagnosing a Job Failure
->
-> **User**: Use the zowe-mcp-server tool and look at job JOB00245 failed. Can you tell me why?
->
-> **AI**: *Uses zowe_get_job_status and zowe_get_job_output* - This job failed with ABEND S0C7, which is a Data Exception. This typically means a packed decimal field contains invalid data. Looking at the spool output, I see the error occurred in STEP020...
-
-### Code Understanding
->
-> **User**: Use the zowe-mcp-server tool and help me understand the PAYROLL program
->
-> **AI**: *Uses zowe_read_dataset* - This COBOL program processes payroll data. It reads an indexed employee master file and calculates weekly pay including tax deductions. Let me walk you through the main sections...
-
-## License
-
-MIT
+Licensed under [MIT](./LICENSE).

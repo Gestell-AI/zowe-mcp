@@ -1,5 +1,15 @@
 # MCP Reference
 
+This document lists the MCP tools, prompts, resources, and command guardrails exposed by `@gestell/zowe-mcp`. For runtime setup and environment variables, see [Configuration](./CONFIGURATION.md). For component boundaries and request flow, see [Architecture](./ARCHITECTURE.md).
+
+## Example Requests
+
+- "Show me what datasets I have access to."
+- "Why did the payroll job fail last night?"
+- "Show me the COBOL source for the payroll program."
+- "Help me understand this COBOL application."
+- "List recent jobs for my user and summarize any failures."
+
 ## Available Tools
 
 ### Dataset Tools
@@ -30,6 +40,25 @@
 |------|-------------|
 | `zowe_tso_command` | Execute TSO commands with safety guardrails |
 | `zowe_console_command` | Execute MVS console commands with safety guardrails |
+
+### USS Tools
+
+| Tool | Description |
+|------|-------------|
+| `zowe_list_uss_files` | List files and directories in a USS path |
+| `zowe_view_uss_file` | Read a text file from Unix System Services |
+| `zowe_search_uss_file` | Search for a text pattern in a USS file |
+
+### DB2 Tools
+
+These tools require the Zowe DB2 CLI plugin and a configured DB2 profile.
+
+| Tool | Description |
+|------|-------------|
+| `zowe_db2_execute_sql` | Execute a SQL statement against a DB2 subsystem |
+| `zowe_db2_list_tables` | List DB2 tables, optionally filtered by schema |
+| `zowe_db2_describe_table` | Describe table columns, data types, and nullability |
+| `zowe_db2_export_table` | Export rows from a DB2 table with optional filtering |
 
 ### Error Reference Tools
 
@@ -79,20 +108,3 @@ The server includes safety guardrails that classify commands by risk level:
 - **BLOCKED**: Destructive commands (DELETE, CANCEL, PURGE, FORCE) - rejected
 
 This prevents the AI from accidentally executing destructive operations.
-
-## Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ZOWE_MCP_MOCK` | Enable mock mode (`true`/`false`) | `false` |
-| `ZOWE_MCP_BASE_PROFILE` | Base profile name to pass as `--base-profile` | unset |
-| `ZOWE_MCP_ZOSMF_PROFILE` | z/OSMF profile name for files/jobs/console commands | unset |
-| `ZOWE_MCP_TSO_PROFILE` | TSO profile name for TSO commands | unset |
-| `ZOWE_MCP_TSO_ACCOUNT` | TSO account to pass as `--account` when required | unset |
-| `ZOWE_MCP_EXEC_TIMEOUT_MS` | Per-command Zowe CLI timeout in milliseconds | `300000` |
-| `ZOWE_MCP_INLINE_WAIT_MS` | How long a tool waits before returning an async `task_id` | `10000` |
-| `ZOWE_MCP_WAIT_TOOL_MAX_WAIT_MS` | Default max wait window for `zowe_wait_async_task` | `300000` |
-| `ZOWE_MCP_WAIT_TOOL_POLL_INTERVAL_MS` | Default poll interval for `zowe_wait_async_task` | `2000` |
-| `ZOWE_MCP_TASK_TTL_MS` | How long completed async tasks are retained | `3600000` |
-| `ZOWE_MCP_MAX_TASKS` | Maximum in-memory async task records kept | `300` |
-| `ZOWE_PROFILE` | Legacy fallback base profile (ignored when set to `default`) | `default` |
